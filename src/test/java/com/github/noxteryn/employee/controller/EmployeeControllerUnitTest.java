@@ -49,9 +49,11 @@ public class EmployeeControllerUnitTest
 				.title("Software Developer")
 				.build();
 	}
+
+	// Get Tests
 	@Test
 	@WithMockUser(username = "TestUser", roles = {"USER"})
-	public void test_GetAll_Returns200() throws Exception
+	public void test_GetAll_200() throws Exception
 	{
 		mvc.perform(get("/employee"))
 				.andExpect(status().isOk())
@@ -59,10 +61,17 @@ public class EmployeeControllerUnitTest
 				.andExpect(content().json("[]"));
 		verify(employeeService, times(1)).getAllEmployees();
 	}
+	@Test
+	public void test_GetWithoutLogin_401() throws Exception
+	{
+		mvc.perform(get("/employee"))
+				.andExpect(status().isUnauthorized());
+	}
 
+	// Post Tests
 	@Test
 	@WithMockUser(username = "TestUser", roles = {"USER"})
-	public void test_Post_Returns201() throws Exception
+	public void test_Post_201() throws Exception
 	{
 		Employee employee = createEmployee();
 		given(employeeService.newEmployee(any(Employee.class)))
@@ -78,15 +87,70 @@ public class EmployeeControllerUnitTest
 				.content(requestBody))
 				.andExpect(status().isCreated());
 	}
+	@Test
+	public void test_PostWithoutLogin_401() throws Exception
+	{
+		Employee employee = createEmployee();
+		given(employeeService.newEmployee(any(Employee.class)))
+				.willAnswer((invocation)-> invocation.getArgument(0));
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		String requestBody = mapper.writeValueAsString(employee);
 
+		mvc.perform(post("/employee")
+				.with(csrf().asHeader()) // CSRF token is required.
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestBody))
+				.andExpect(status().isUnauthorized());
+	}
 	@Test
 	@WithMockUser(username = "TestUser", roles = {"USER"})
-	public void test_Delete_Returns200() throws Exception
+	public void test_PostWithoutCSRFToken_403() throws Exception
+	{
+		Employee employee = createEmployee();
+		given(employeeService.newEmployee(any(Employee.class)))
+				.willAnswer((invocation)-> invocation.getArgument(0));
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		String requestBody = mapper.writeValueAsString(employee);
+
+		mvc.perform(post("/employee")
+				.with(csrf().useInvalidToken()) // Deliberately using an invalid CSRF token.
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestBody))
+				.andExpect(status().isForbidden());
+	}
+
+	// Delete Tests
+	@Test
+	@WithMockUser(username = "TestUser", roles = {"USER"})
+	public void test_Delete_200() throws Exception
 	{
 		Long id = 1L;
 		willDoNothing().given(employeeService).deleteEmployeeById(id);
 		mvc.perform(delete("/employee/{id}", id)
 				.with(csrf().asHeader())) // CSRF token is required.
 				.andExpect(status().isOk());
+	}
+	@Test
+	public void test_DeleteWithoutLogin_401() throws Exception
+	{
+		Long id = 1L;
+		willDoNothing().given(employeeService).deleteEmployeeById(id);
+		mvc.perform(delete("/employee/{id}", id)
+				.with(csrf().asHeader())) // CSRF token is required.
+				.andExpect(status().isUnauthorized());
+	}
+	@Test
+	@WithMockUser(username = "TestUser", roles = {"USER"})
+	public void test_DeleteWithoutCSRFToken_403() throws Exception
+	{
+		Long id = 1L;
+		willDoNothing().given(employeeService).deleteEmployeeById(id);
+		mvc.perform(delete("/employee/{id}", id)
+				.with(csrf().useInvalidToken())) // Deliberately using an invalid CSRF token.
+				.andExpect(status().isForbidden());
 	}
 }
