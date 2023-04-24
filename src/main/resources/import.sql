@@ -1,0 +1,10 @@
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1986-03-18', 'noxteryn@employee.com',     'Chris', 'Fujikawa',    246879606);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1987-04-19',   'potato@employee.com',     'John', 'Smith',        888888484);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1989-02-28',    'death@employee.com',     'Mary', 'Sue',          987605000);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1991-03-21',   'rocket@employee.com',     'Jack', 'Frost',        111100001);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1979-09-03',   'tomato@employee.com',     'Crystal', 'Waters',    246860006);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1999-06-12',    'sword@employee.com',     'John', 'Smith',        777750005);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1981-03-17',     'boat@employee.com',     'Chris', 'Warren',      111270007);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1984-03-11',   'almond@employee.com',     'Mary', 'Smith',        987654321);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1987-03-02',   'summer@employee.com',     'Helen', 'Warren',      432104004);
+INSERT INTO employee (BIRTH_DATE, EMAIL, FIRST_NAME, LAST_NAME, SOCIAL_SECURITY) VALUES ('1954-12-30', 'universe@employee.com',     'Sarah', 'Williams',    098765431);

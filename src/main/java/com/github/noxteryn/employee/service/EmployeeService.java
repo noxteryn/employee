@@ -1,6 +1,7 @@
 package com.github.noxteryn.employee.service;
 
 import com.github.noxteryn.employee.model.Employee;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

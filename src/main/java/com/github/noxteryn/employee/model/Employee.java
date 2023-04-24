@@ -1,12 +1,12 @@
 package com.github.noxteryn.employee.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -19,21 +19,16 @@ public class Employee
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	@NotBlank
-	String firstName;
+	private String firstName;
 	@NotBlank
-	String lastName;
+	private String lastName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
-	LocalDate birthDate;
+	private Date birthDate;
 	@Email
-	String email;
-	@Column
-	int socialSecurity;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern="yyyy-MM-dd")
-	LocalDate startDate;
-	String title;
+	private String email;
+	private int socialSecurity;
 }
 
