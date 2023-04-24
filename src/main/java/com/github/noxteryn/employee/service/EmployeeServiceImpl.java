@@ -3,12 +3,8 @@ package com.github.noxteryn.employee.service;
 import com.github.noxteryn.employee.exception.EmployeeNotFoundException;
 import com.github.noxteryn.employee.model.Employee;
 import com.github.noxteryn.employee.repository.EmployeeRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +45,17 @@ public class EmployeeServiceImpl implements EmployeeService
 	}
 
 	@Override
-	public void deleteEmployeeById(Long id)
+	public ResponseEntity<Void> deleteEmployeeById(Long id)
 	{
 		Optional<Employee> employee = employeeRepository.findById(id);
 		if (employee.isPresent())
 		{
 			employeeRepository.deleteById(id);
+			return ResponseEntity.noContent().build();
 		}
 		else
 		{
-			throw new EmployeeNotFoundException("Invalid ID. Employee not found.");
+			return ResponseEntity.notFound().build();
 		}
 	}
 }

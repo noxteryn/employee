@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @RestController
@@ -54,10 +52,9 @@ public class EmployeeController
 	}
 
 	@DeleteMapping("/employee/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delEmployee(@PathVariable Long id)
+	public ResponseEntity<Void> delEmployee(@PathVariable Long id)
 	{
-		employeeService.deleteEmployeeById(id);
+		return employeeService.deleteEmployeeById(id);
 	}
 
 	@ExceptionHandler(EmployeeNotFoundException.class)

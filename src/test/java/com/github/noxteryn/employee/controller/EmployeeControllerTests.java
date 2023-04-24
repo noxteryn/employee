@@ -1,8 +1,6 @@
 package com.github.noxteryn.employee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.noxteryn.employee.exception.EmployeeNotFoundException;
 import com.github.noxteryn.employee.model.Employee;
 import com.github.noxteryn.employee.repository.EmployeeRepository;
@@ -13,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -116,10 +115,7 @@ public class EmployeeControllerTests
 		Employee employee = createEmployee();
 		given(employeeService.newEmployee(any(Employee.class)))
 				.willAnswer((invocation)-> invocation.getArgument(0));
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		String requestBody = mapper.writeValueAsString(employee);
+		String requestBody = new ObjectMapper().writeValueAsString(employee);
 
 		mvc.perform(post("/employee")
 				.with(csrf().asHeader()) // CSRF token is required.
@@ -134,10 +130,7 @@ public class EmployeeControllerTests
 		Employee employee = createEmployee();
 		given(employeeService.newEmployee(any(Employee.class)))
 				.willAnswer((invocation)-> invocation.getArgument(0));
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		String requestBody = mapper.writeValueAsString(employee);
+		String requestBody = new ObjectMapper().writeValueAsString(employee);
 
 		mvc.perform(post("/employee")
 				.with(csrf().useInvalidToken()) // Deliberately using an invalid CSRF token.
@@ -151,21 +144,26 @@ public class EmployeeControllerTests
 	// =============== Delete Tests ===============
 	@Test
 	@WithMockUser(username = "TestUser", roles = {"USER"})
-	public void test_Delete_200() throws Exception
+	public void test_Delete_204() throws Exception
 	{
 		Long id = 1L;
-		willDoNothing().given(employeeService).deleteEmployeeById(id);
+		when(employeeService.deleteEmployeeById(id)).thenReturn(ResponseEntity.noContent().build());
+
 		mvc.perform(delete("/employee/{id}", id)
-				.with(csrf().asHeader())) // CSRF token is required.
-				.andExpect(status().isOk());
+				.with(csrf().asHeader()) // CSRF token is required.
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
+		verify(employeeService, times(1)).deleteEmployeeById(id);
 	}
 	@Test
 	public void test_DeleteWithoutLogin_401() throws Exception
 	{
 		Long id = 1L;
-		willDoNothing().given(employeeService).deleteEmployeeById(id);
+		when(employeeService.deleteEmployeeById(id)).thenReturn(ResponseEntity.noContent().build());
+
 		mvc.perform(delete("/employee/{id}", id)
-				.with(csrf().asHeader())) // CSRF token is required.
+				.with(csrf().asHeader()) // CSRF token is required.
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
 	}
 	@Test
@@ -173,9 +171,21 @@ public class EmployeeControllerTests
 	public void test_DeleteWithoutCSRFToken_403() throws Exception
 	{
 		Long id = 1L;
-		willDoNothing().given(employeeService).deleteEmployeeById(id);
+		when(employeeService.deleteEmployeeById(id)).thenReturn(ResponseEntity.noContent().build());
+
 		mvc.perform(delete("/employee/{id}", id)
-				.with(csrf().useInvalidToken())) // Deliberately using an invalid CSRF token.
+				.with(csrf().useInvalidToken()) // Deliberately using an invalid CSRF token.
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isForbidden());
+	}
+	@Test
+	@WithMockUser(username = "TestUser", roles = {"USER"})
+	public void test_Delete_404() throws Exception
+	{
+		Long id = 1L;
+		doThrow(EmployeeNotFoundException.class).when(employeeService).deleteEmployeeById(id);
+		mvc.perform(delete("/employee/{id}", id)
+				.with(csrf().asHeader())) // CSRF token is required.
+				.andExpect(status().isNotFound());
 	}
 }
