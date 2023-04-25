@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/")
@@ -49,6 +49,12 @@ public class EmployeeController
 	public Employee postEmployee(@RequestBody Employee employee)
 	{
 		return employeeService.newEmployee(employee);
+	}
+
+	@PutMapping("/employee/{id}")
+	public ResponseEntity<Employee> putEmployee(@PathVariable Long id, @RequestBody Employee newEmployee)
+	{
+		return employeeService.updateEmployee(id, employeeService.getEmployeeById(id), newEmployee);
 	}
 
 	@DeleteMapping("/employee/{id}")

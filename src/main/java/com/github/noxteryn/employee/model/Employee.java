@@ -23,8 +23,7 @@ public class Employee
 	private String firstName;
 	@NotBlank
 	private String lastName;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date birthDate;
 	@Email
 	private String email;

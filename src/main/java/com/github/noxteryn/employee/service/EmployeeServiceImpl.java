@@ -31,8 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService
 		if (employee.isPresent())
 		{
 			return employee.get();
-		}
-		else
+		} else
 		{
 			throw new EmployeeNotFoundException("Invalid ID. Employee not found.");
 		}
@@ -42,6 +41,17 @@ public class EmployeeServiceImpl implements EmployeeService
 	public Employee newEmployee(Employee employee)
 	{
 		return employeeRepository.save(employee);
+	}
+
+	@Override
+	public ResponseEntity<Employee> updateEmployee(Long id, Employee oldEmployee, Employee newEmployee)
+	{
+		oldEmployee.setFirstName(newEmployee.getFirstName());
+		oldEmployee.setLastName(newEmployee.getLastName());
+		oldEmployee.setBirthDate(newEmployee.getBirthDate());
+		oldEmployee.setEmail(newEmployee.getEmail());
+		oldEmployee.setSocialSecurity(newEmployee.getSocialSecurity());
+		return ResponseEntity.ok(employeeRepository.save(oldEmployee));
 	}
 
 	@Override

@@ -10,4 +10,5 @@ public interface EmployeeService
 	Employee getEmployeeById(Long id);
 	Employee newEmployee(Employee employee);
 	ResponseEntity<Void> deleteEmployeeById(Long id);
+	ResponseEntity<Employee> updateEmployee(Long id, Employee oldEmployee, Employee newEmployee);
 }

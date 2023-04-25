@@ -21,7 +21,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(EmployeeController.class)
@@ -37,7 +37,7 @@ public class EmployeeControllerTests
 
 	public Employee createEmployee()
 	{
-		return Employee.builder()
+		Employee employee = Employee.builder()
 				.id(1L)
 				.firstName("Chris")
 				.lastName("Fujikawa")
@@ -45,6 +45,7 @@ public class EmployeeControllerTests
 				.email("noxteryn@employee.com")
 				.socialSecurity(123456789)
 				.build();
+		return employee;
 	}
 
 
@@ -87,7 +88,6 @@ public class EmployeeControllerTests
 		Long id = 1L;
 		when(employeeService.getEmployeeById(anyLong())).thenThrow(EmployeeNotFoundException.class);
 		mvc.perform(get("/employee/{id}", id))
-				.andDo(print())
 				.andExpect(status().isNotFound());
 	}
 
@@ -137,6 +137,34 @@ public class EmployeeControllerTests
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(requestBody))
 				.andExpect(status().isForbidden());
+	}
+
+
+
+	// =============== Put Tests ===============
+	@Test
+	@WithMockUser(username = "TestUser", roles = {"USER"})
+	public void test_Put_200() throws Exception
+	{
+		Long id = 1L;
+		Employee oldEmployee = createEmployee();
+		Employee newEmployee = createEmployee();
+		newEmployee.setLastName("Filippidis");
+		given(employeeService.getEmployeeById(id)).willReturn(oldEmployee);
+		given(employeeService.updateEmployee(eq(id), eq(oldEmployee), any(Employee.class)))
+				.willReturn(ResponseEntity.ok(newEmployee));
+		String requestBody = new ObjectMapper().writeValueAsString(newEmployee);
+
+		mvc.perform(put("/employee/{id}", id)
+				.with(csrf().asHeader()) // CSRF token is required.
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(requestBody))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.firstName", is(newEmployee.getFirstName())))
+				.andExpect(jsonPath("$.lastName", is(newEmployee.getLastName())))
+				.andExpect(jsonPath("$.birthDate", is(newEmployee.getBirthDate())))
+				.andExpect(jsonPath("$.email", is(newEmployee.getEmail())))
+				.andExpect(jsonPath("$.socialSecurity", is(newEmployee.getSocialSecurity())));
 	}
 
 
