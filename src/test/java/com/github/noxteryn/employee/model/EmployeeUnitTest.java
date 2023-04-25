@@ -3,7 +3,7 @@ package com.github.noxteryn.employee.model;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
-import java.sql.Date;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +17,7 @@ public class EmployeeUnitTest
 				.id(1L)
 				.firstName("Chris")
 				.lastName("Fujikawa")
-				.birthDate(Date.valueOf("1986-03-18"))
+				.birthDate(LocalDate.of(1986, 3, 18))
 				.email("noxteryn@employee.com")
 				.socialSecurity(123456789)
 				.build();

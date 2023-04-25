@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,7 +23,7 @@ public class Employee
 	@NotBlank
 	private String lastName;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Date birthDate;
+	private LocalDate birthDate;
 	@Email
 	private String email;
 	private int socialSecurity;
