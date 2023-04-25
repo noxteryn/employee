@@ -2,6 +2,7 @@ package com.github.noxteryn.employee.service;
 
 import com.github.noxteryn.employee.model.Employee;
 import org.springframework.http.ResponseEntity;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EmployeeService
@@ -11,4 +12,5 @@ public interface EmployeeService
 	Employee newEmployee(Employee employee);
 	ResponseEntity<Void> deleteEmployeeById(Long id);
 	ResponseEntity<Employee> updateEmployee(Long id, Employee oldEmployee, Employee newEmployee);
+	List<Employee> searchEmployees(String firstName, String lastName, LocalDate birthDate, String email, Integer socialSecurity);
 }

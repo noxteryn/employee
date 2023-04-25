@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -42,6 +43,17 @@ public class EmployeeController
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return ResponseEntity.ok().headers(headers).body(employee);
+	}
+
+	@GetMapping("/employee/search")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Employee> searchEmployees(@RequestParam(name = "firstName", required = false) String firstName,
+	                                      @RequestParam(name = "lastName", required = false) String lastName,
+	                                      @RequestParam(name = "birthDate", required = false) LocalDate birthDate,
+	                                      @RequestParam(name = "email", required = false) String email,
+	                                      @RequestParam(name = "socialSecurity", required = false) Integer socialSecurity)
+	{
+		return employeeService.searchEmployees(firstName, lastName, birthDate, email, socialSecurity);
 	}
 
 	@PostMapping("/employee")

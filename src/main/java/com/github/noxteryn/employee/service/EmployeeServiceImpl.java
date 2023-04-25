@@ -3,19 +3,61 @@ package com.github.noxteryn.employee.service;
 import com.github.noxteryn.employee.exception.EmployeeNotFoundException;
 import com.github.noxteryn.employee.model.Employee;
 import com.github.noxteryn.employee.repository.EmployeeRepository;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService
 {
 	private final EmployeeRepository employeeRepository;
+	private final EntityManager entityManager;
 
-	public EmployeeServiceImpl(EmployeeRepository employeeRepository)
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository, EntityManager entityManager)
 	{
 		this.employeeRepository = employeeRepository;
+		this.entityManager = entityManager;
+	}
+
+	public List<Employee> searchEmployees(String firstName, String lastName, LocalDate birthDate, String email, Integer socialSecurity)
+	{
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Employee> query = builder.createQuery(Employee.class);
+		Root<Employee> root = query.from(Employee.class);
+
+		List<Predicate> predicates = new ArrayList<>();
+
+		if (firstName != null)
+		{
+			predicates.add(builder.like(root.get("firstName"), "%" + firstName + "%"));
+		}
+
+		if (lastName != null)
+		{
+			predicates.add(builder.like(root.get("lastName"), "%" + lastName + "%"));
+		}
+
+		if (birthDate != null)
+		{
+			predicates.add(builder.equal(root.get("birthDate"), birthDate));
+		}
+
+		if (email != null)
+		{
+			predicates.add(builder.like(root.get("email"), email));
+		}
+
+		if (socialSecurity != null)
+		{
+			predicates.add(builder.equal(root.get("socialSecurity"), socialSecurity));
+		}
+
+		query.where(predicates.toArray(new Predicate[0]));
+
+		return entityManager.createQuery(query).getResultList();
 	}
 
 	@Override
