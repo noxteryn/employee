@@ -2,6 +2,7 @@ package com.github.noxteryn.employee.controller;
 
 import com.github.noxteryn.employee.exception.EmployeeNotFoundException;
 import com.github.noxteryn.employee.model.Employee;
+import com.github.noxteryn.employee.model.SearchCriteria;
 import com.github.noxteryn.employee.repository.EmployeeRepository;
 import com.github.noxteryn.employee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -47,13 +47,9 @@ public class EmployeeController
 
 	@GetMapping("/employee/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Employee> searchEmployees(@RequestParam(name = "firstName", required = false) String firstName,
-	                                      @RequestParam(name = "lastName", required = false) String lastName,
-	                                      @RequestParam(name = "birthDate", required = false) LocalDate birthDate,
-	                                      @RequestParam(name = "email", required = false) String email,
-	                                      @RequestParam(name = "socialSecurity", required = false) Integer socialSecurity)
+	public List<Employee> searchEmployees(@RequestParam(name = "search") List<SearchCriteria> search)
 	{
-		return employeeService.searchEmployees(firstName, lastName, birthDate, email, socialSecurity);
+		return employeeService.searchEmployees(search);
 	}
 
 	@PostMapping("/employee")

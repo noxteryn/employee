@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.time.LocalDate;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -38,15 +39,14 @@ public class EmployeeControllerTests
 
 	public Employee createEmployee()
 	{
-		Employee employee = Employee.builder()
+		return Employee.builder()
 				.id(1L)
 				.firstName("Chris")
 				.lastName("Fujikawa")
 				.birthDate(LocalDate.of(1986, 3, 18))
 				.email("noxteryn@employee.com")
-				.socialSecurity(123456789)
+				.socialSecurity(987654321)
 				.build();
-		return employee;
 	}
 
 
