@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class SearchUnitTests
+public class JPACriteriaConsumerTests
 {
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -52,44 +52,44 @@ public class SearchUnitTests
 	}
 
 	@Test
-	public void test_search_by_FirstAndLastName()
+	public void test_search_by_FirstAndLastName() throws Exception
 	{
 		List<SearchCriteria> params = new ArrayList<SearchCriteria>();
-		params.add(new SearchCriteria("firstName", ":", "John"));
-		params.add(new SearchCriteria("lastName", ":", "Doe"));
+		params.add(new SearchCriteria("firstName", ":", "john"));
+		params.add(new SearchCriteria("lastName", ":", "doe"));
 
 		List<Employee> results = employeeService.searchEmployees(params);
 
 		assertThat(results.size(), is(equalTo(1)));
-		assertThat(results.get(0).getFirstName(), is(equalTo("John")));
-		assertThat(results.get(0).getLastName(), is(equalTo("Doe")));
+		assertThat(results.get(0).getFirstName(), is(equalToIgnoringCase("John")));
+		assertThat(results.get(0).getLastName(), is(equalToIgnoringCase("Doe")));
 		assertThat(results.get(0).getBirthDate(), is(equalTo(LocalDate.of(1986, 3, 18))));
-		assertThat(results.get(0).getEmail(), is(equalTo("john@doe.com")));
+		assertThat(results.get(0).getEmail(), is(equalToIgnoringCase("john@doe.com")));
 		assertThat(results.get(0).getSocialSecurity(), is(equalTo(123456789)));
 	}
 
 	@Test
-	public void test_search_by_LastName()
+	public void test_search_by_LastName() throws Exception
 	{
 		List<SearchCriteria> params = new ArrayList<SearchCriteria>();
-		params.add(new SearchCriteria("lastName", ":", "Doe"));
+		params.add(new SearchCriteria("lastName", ":", "doe"));
 
 		List<Employee> results = employeeService.searchEmployees(params);
 		assertThat(results.size(), is(equalTo(2)));
-		assertThat(results.get(0).getFirstName(), is(equalTo("John")));
-		assertThat(results.get(0).getLastName(), is(equalTo("Doe")));
+		assertThat(results.get(0).getFirstName(), is(equalToIgnoringCase("John")));
+		assertThat(results.get(0).getLastName(), is(equalToIgnoringCase("Doe")));
 		assertThat(results.get(0).getBirthDate(), is(equalTo(LocalDate.of(1986, 3, 18))));
-		assertThat(results.get(0).getEmail(), is(equalTo("john@doe.com")));
+		assertThat(results.get(0).getEmail(), is(equalToIgnoringCase("john@doe.com")));
 		assertThat(results.get(0).getSocialSecurity(), is(equalTo(123456789)));
-		assertThat(results.get(1).getFirstName(), is(equalTo("Tom")));
-		assertThat(results.get(1).getLastName(), is(equalTo("Doe")));
+		assertThat(results.get(1).getFirstName(), is(equalToIgnoringCase("Tom")));
+		assertThat(results.get(1).getLastName(), is(equalToIgnoringCase("Doe")));
 		assertThat(results.get(1).getBirthDate(), is(equalTo(LocalDate.of(1987, 4, 19))));
-		assertThat(results.get(1).getEmail(), is(equalTo("tom@doe.com")));
+		assertThat(results.get(1).getEmail(), is(equalToIgnoringCase("tom@doe.com")));
 		assertThat(results.get(1).getSocialSecurity(), is(equalTo(987654321)));
 	}
 
 	@Test
-	public void test_search_EmployeeDoesNotExist()
+	public void test_search_EmployeeDoesNotExist() throws Exception
 	{
 		List<SearchCriteria> params = new ArrayList<SearchCriteria>();
 		params.add(new SearchCriteria("firstName", ":", "Adam"));
@@ -100,7 +100,7 @@ public class SearchUnitTests
 	}
 
 	@Test
-	public void test_search_by_Partial()
+	public void test_search_by_Partial() throws Exception
 	{
 		List<SearchCriteria> params = new ArrayList<SearchCriteria>();
 		params.add(new SearchCriteria("firstName", ":", "oh"));
@@ -108,10 +108,10 @@ public class SearchUnitTests
 		List<Employee> results = employeeService.searchEmployees(params);
 
 		assertThat(results.size(), is(equalTo(1)));
-		assertThat(results.get(0).getFirstName(), is(equalTo("John")));
-		assertThat(results.get(0).getLastName(), is(equalTo("Doe")));
+		assertThat(results.get(0).getFirstName(), is(equalToIgnoringCase("John")));
+		assertThat(results.get(0).getLastName(), is(equalToIgnoringCase("Doe")));
 		assertThat(results.get(0).getBirthDate(), is(equalTo(LocalDate.of(1986, 3, 18))));
-		assertThat(results.get(0).getEmail(), is(equalTo("john@doe.com")));
+		assertThat(results.get(0).getEmail(), is(equalToIgnoringCase("john@doe.com")));
 		assertThat(results.get(0).getSocialSecurity(), is(equalTo(123456789)));
 	}
 }

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-public class EmployeeUnitTest
+public class EmployeeTest
 {
 
 	public Employee createEmployee()

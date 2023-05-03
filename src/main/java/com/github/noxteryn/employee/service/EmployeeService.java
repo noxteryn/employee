@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EmployeeService
 {
-	List<Employee> getAllEmployees();
+	List<Employee> getAllEmployees(String search);
 	Employee getEmployeeById(Long id);
 	Employee newEmployee(Employee employee);
 	ResponseEntity<Void> deleteEmployeeById(Long id);

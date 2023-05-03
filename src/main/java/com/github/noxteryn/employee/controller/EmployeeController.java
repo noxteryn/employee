@@ -31,9 +31,9 @@ public class EmployeeController
 
 	@GetMapping("/employee")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Employee> getAllEmployees()
+	public List<Employee> getAllEmployees(@RequestParam(value = "search", required = false) String search)
 	{
-		return employeeService.getAllEmployees();
+		return employeeService.getAllEmployees(search);
 	}
 
 	@GetMapping("/employee/{id}")
@@ -43,13 +43,6 @@ public class EmployeeController
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return ResponseEntity.ok().headers(headers).body(employee);
-	}
-
-	@GetMapping("/employee/search")
-	@ResponseStatus(HttpStatus.OK)
-	public List<Employee> searchEmployees(@RequestParam(name = "search") List<SearchCriteria> search)
-	{
-		return employeeService.searchEmployees(search);
 	}
 
 	@PostMapping("/employee")

@@ -60,7 +60,7 @@ public class EmployeeControllerTests
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json("[]"));
-		verify(employeeService, times(1)).getAllEmployees();
+		verify(employeeService, times(1)).getAllEmployees(null);
 	}
 	@Test
 	public void test_GetWithoutLogin_401() throws Exception

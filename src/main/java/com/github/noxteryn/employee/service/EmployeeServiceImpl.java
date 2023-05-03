@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.regex.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService
@@ -38,9 +39,23 @@ public class EmployeeServiceImpl implements EmployeeService
 	}
 
 	@Override
-	public List<Employee> getAllEmployees()
+	public List<Employee> getAllEmployees(String search)
 	{
-		return employeeRepository.findAll();
+		if (search == null)
+		{
+			return employeeRepository.findAll();
+		}
+		else
+		{
+			List<SearchCriteria> params = new ArrayList<SearchCriteria>();
+			Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+			Matcher matcher = pattern.matcher(search + ",");
+			while (matcher.find())
+			{
+				params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+			}
+			return searchEmployees(params);
+		}
 	}
 
 	@Override
